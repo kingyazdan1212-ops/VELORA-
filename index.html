@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0c0f18">
+<title>Velora Calculator</title>
+<style>
+:root{--bg:#0c0f18;--panel:#151a27;--panel2:#1b2232;--gold:#d7b56d;--gold2:#f4dfaa;--txt:#f5f1e8;--muted:#8f9aae;--line:#293247;--red:#d97777}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#20263a 0,#0c0f18 58%);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;min-height:100vh;padding:18px 14px 26px}
+.app{max-width:520px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;margin:8px 2px 20px}.brand{display:flex;align-items:center;gap:11px}.logo{width:43px;height:43px;border-radius:15px;background:linear-gradient(145deg,#f3dfa9,#a67d35);color:#17140d;display:grid;place-items:center;font-size:23px;font-weight:900;box-shadow:0 6px 22px #d7b56d30}.brand h1{font-size:17px;letter-spacing:2px;margin:0}.brand p{font-size:10px;color:var(--muted);margin:3px 0 0;letter-spacing:2px}.pill{border:1px solid #5a4c2e;border-radius:30px;padding:7px 10px;color:var(--gold2);font-size:11px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#111622;border:1px solid var(--line);padding:5px;border-radius:15px;margin-bottom:13px}.tab{border:0;border-radius:11px;background:transparent;color:var(--muted);padding:12px;font:inherit;font-size:13px}.tab.active{background:linear-gradient(120deg,#d8b66d,#a77d35);color:#17140d;font-weight:800}
+.display{background:linear-gradient(145deg,#191f2e,#111622);border:1px solid #30394d;border-radius:23px;padding:20px 18px 17px;min-height:148px;box-shadow:0 18px 40px #0003;position:relative;overflow:hidden}.display:after{content:"";position:absolute;width:170px;height:170px;border-radius:50%;border:1px solid #d7b56d12;left:-65px;top:-70px}.history{color:var(--muted);font-size:13px;min-height:22px;direction:ltr;text-align:left;word-break:break-all}.result{font-size:clamp(32px,9vw,48px);font-weight:300;direction:ltr;text-align:left;word-break:break-all;line-height:1.25;margin-top:15px;position:relative;z-index:1}.display-foot{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:10px;letter-spacing:1px}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}.key{border:1px solid #2a3244;background:linear-gradient(145deg,#20283a,#171d2b);color:var(--txt);border-radius:15px;min-height:58px;font-size:19px;font-family:inherit;box-shadow:0 4px 0 #090c12;cursor:pointer;touch-action:manipulation}.key:active{transform:translateY(2px);box-shadow:0 2px 0 #090c12}.key.fn{color:var(--gold2);background:#242535}.key.clear{color:#f0a0a0}.key.op{color:var(--gold2);font-size:22px}.key.equal{background:linear-gradient(145deg,#f0d796,#b88d43);color:#19150d;border:0;font-weight:800}.key.zero{grid-column:span 2}
+.panel{margin-top:14px;background:#141a27;border:1px solid var(--line);border-radius:21px;padding:17px}.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.panel-head h2{font-size:15px;margin:0}.panel-head span{font-size:10px;color:var(--gold);letter-spacing:1px}.unit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;color:var(--muted);font-size:11px;margin:0 4px 7px}.field select,.field input{width:100%;min-width:0;background:#0e1320;color:var(--txt);border:1px solid #30394d;border-radius:12px;padding:12px 10px;font:inherit;font-size:13px;outline:none}.field input{direction:ltr;text-align:left}.swap{width:100%;margin:11px 0;border:1px solid #51452d;border-radius:12px;padding:10px;background:#211f24;color:var(--gold2);font:inherit}.unit-result{border-radius:13px;background:linear-gradient(120deg,#252334,#171d2b);border:1px solid #51452d;padding:14px;direction:ltr;text-align:left;font-size:22px;color:var(--gold2);overflow-wrap:anywhere}.unit-note{font-size:10px;color:var(--muted);margin-top:8px}.footer{text-align:center;color:#667086;font-size:10px;letter-spacing:2px;margin:20px 0 0}.hidden{display:none!important}
+@media(max-width:360px){body{padding:12px 10px}.key{min-height:52px}.keys{gap:7px}.display{padding:16px}.panel{padding:13px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand"><div class="logo">V</div><div><h1>VELORA</h1><p>PRECISION • REDEFINED</p></div></div><div class="pill">✦ PREMIUM</div></header>
+<div class="tabs"><button class="tab active" data-tab="calc">ماشین‌حساب</button><button class="tab" data-tab="units">تبدیل واحد</button></div>
+<section id="calc">
+<div class="display"><div id="history" class="history">READY TO CALCULATE</div><div id="result" class="result">0</div><div class="display-foot"><span>VELORA ENGINE</span><span id="mode">STANDARD</span></div></div>
+<div class="keys" id="keys">
+<button class="key clear" data-action="clear">AC</button><button class="key fn" data-action="back">⌫</button><button class="key fn" data-value="(">(</button><button class="key fn" data-value=")">)</button>
+<button class="key fn" data-value="sin(">sin</button><button class="key fn" data-value="cos(">cos</button><button class="key fn" data-value="tan(">tan</button><button class="key op" data-value="÷">÷</button>
+<button class="key" data-value="7">7</button><button class="key" data-value="8">8</button><button class="key" data-value="9">9</button><button class="key op" data-value="×">×</button>
+<button class="key" data-value="4">4</button><button class="key" data-value="5">5</button><button class="key" data-value="6">6</button><button class="key op" data-value="−">−</button>
+<button class="key" data-value="1">1</button><button class="key" data-value="2">2</button><button class="key" data-value="3">3</button><button class="key op" data-value="+">+</button>
+<button class="key zero" data-value="0">0</button><button class="key" data-value=".">.</button><button class="key equal" data-action="equals">=</button>
+<button class="key fn" data-value="√(">√</button><button class="key fn" data-value="^">xʸ</button><button class="key fn" data-value="%">%</button><button class="key fn" data-value="π">π</button>
+</div></section>
+<section id="units" class="panel hidden">
+<div class="panel-head"><h2>مبدل واحد هوشمند</h2><span>UNIT CONVERTER</span></div>
+<div class="field" style="margin-bottom:12px"><label>دسته‌بندی</label><select id="category"><option value="length">طول</option><option value="mass">جرم / وزن</option><option value="temp">دما</option><option value="area">مساحت</option><option value="volume">حجم</option><option value="speed">سرعت</option><option value="time">زمان</option><option value="data">داده دیجیتال</option><option value="pressure">فشار</option><option value="energy">انرژی</option></select></div>
+<div class="field" style="margin-bottom:12px"><label>مقدار ورودی</label><input id="amount" type="number" inputmode="decimal" value="1" step="any"></div>
+<div class="unit-grid"><div class="field"><label>از واحد</label><select id="from"></select></div><div class="field"><label>به واحد</label><select id="to"></select></div></div>
+<button class="swap" id="swap">⇄ تعویض واحدها</button><div class="unit-result" id="unitResult">1000</div><div class="unit-note" id="unitNote">تبدیل دقیق بر اساس ضرایب استاندارد</div>
+</section>
+<div class="footer">DESIGNED FOR CLARITY · BUILT FOR YOU</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);let expr='',justSolved=false;
+const fmt=n=>{if(!Number.isFinite(n))return 'خطا';if(Math.abs(n)<1e-12)n=0;return Number(n.toPrecision(12)).toLocaleString('en-US',{useGrouping:false,maximumFractionDigits:10})};
+function show(){ $('result').textContent=expr||'0'; }
+function add(v){if(justSolved && /[0-9.(π]/.test(v))expr='';justSolved=false;expr+=v;show()}
+function safeEval(s){
+ s=s.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+ // Convert common calculator functions before substituting constants.
+ // Trigonometric input is in degrees.
+ s=s.replace(/sin\(([^()]*)\)/g,'Math.sin(($1)*Math.PI/180)')
+  .replace(/cos\(([^()]*)\)/g,'Math.cos(($1)*Math.PI/180)')
+  .replace(/tan\(([^()]*)\)/g,'Math.tan(($1)*Math.PI/180)')
+  .replace(/√\(([^()]*)\)/g,'Math.sqrt($1)')
+  .replace(/√(\d+(?:\.\d+)?)/g,'Math.sqrt($1)');
+ s=s.replace(/π/g,'Math.PI');
+ // Percent applies to a numeric literal or PI constant.
+ s=s.replace(/(Math\.PI|\d+(?:\.\d+)?)%/g,'(($1)/100)');
+ // Power for simple numeric/PI operands, including decimal values.
+ s=s.replace(/(Math\.PI|\d+(?:\.\d+)?|\([^()]+\))\s*\^\s*(Math\.PI|-?\d+(?:\.\d+)?|\([^()]+\))/g,'Math.pow($1,$2)');
+ if(!/^[0-9+\\-*/().,\\sA-Za-z]*$/.test(s)||/\\b(?:window|document|eval|Function|constructor|alert|fetch|globalThis)\\b/.test(s))throw Error('invalid');
+ const result=Function('"use strict";return ('+s+')')();
+ if(typeof result!=='number'||!Number.isFinite(result))throw Error('math');
+ return result;
+}
+$('keys').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.action,v=b.dataset.value;
+ if(a==='clear'){expr='';$('history').textContent='READY TO CALCULATE';show();return}
+ if(a==='back'){expr=expr.slice(0,-1);show();return}
+ if(a==='equals'){try{const n=safeEval(expr);$('history').textContent=expr+' =';expr=fmt(n);$('result').textContent=expr;justSolved=true}catch(_){$('history').textContent='عبارت نامعتبر';$('result').textContent='خطا'}return}
+ if(v)add(v);
+});
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===b));$('calc').classList.toggle('hidden',b.dataset.tab!=='calc');$('units').classList.toggle('hidden',b.dataset.tab!=='units')}));
+const units={
+ length:{'میلی‌متر (mm)':.001,'سانتی‌متر (cm)':.01,'متر (m)':1,'کیلومتر (km)':1000,'اینچ (in)':.0254,'فوت (ft)':.3048,'یارد (yd)':.9144,'مایل (mi)':1609.344,'مایل دریایی (nmi)':1852},
+ mass:{'میلی‌گرم (mg)':.000001,'گرم (g)':.001,'کیلوگرم (kg)':1,'تن متریک (t)':1000,'اونس (oz)':.028349523125,'پوند (lb)':.45359237},
+ area:{'متر مربع (m²)':1,'کیلومتر مربع (km²)':1e6,'سانتی‌متر مربع (cm²)':.0001,'هکتار (ha)':10000,'ایکر (acre)':4046.8564224,'فوت مربع (ft²)':.09290304},
+ volume:{'میلی‌لیتر (mL)':.001,'لیتر (L)':1,'متر مکعب (m³)':1000,'قاشق چای‌خوری (tsp)':.00492892159375,'قاشق غذاخوری (tbsp)':.01478676478125,'فنجان آمریکا (cup)':.2365882365,'گالن آمریکا (gal)':3.785411784},
+ speed:{'متر بر ثانیه (m/s)':1,'کیلومتر بر ساعت (km/h)':1/3.6,'مایل بر ساعت (mph)':.44704,'گره (kn)':.5144444444},
+ time:{'ثانیه (s)':1,'دقیقه (min)':60,'ساعت (h)':3600,'روز (d)':86400,'هفته':604800,'سال 365 روزه':31536000},
+ data:{'بیت (bit)':1,'بایت (B)':8,'کیلوبایت (KB)':8000,'مگابایت (MB)':8e6,'گیگابایت (GB)':8e9,'کیبی‌بایت (KiB)':8192,'مبی‌بایت (MiB)':8388608,'گیبی‌بایت (GiB)':8589934592},
+ pressure:{'پاسکال (Pa)':1,'کیلوپاسکال (kPa)':1000,'بار (bar)':100000,'اتمسفر (atm)':101325,'میلی‌متر جیوه (mmHg)':133.322387415,'psi':6894.757293},
+ energy:{'ژول (J)':1,'کیلوژول (kJ)':1000,'کالری (cal)':4.184,'کیلوکالری (kcal)':4184,'وات‌ساعت (Wh)':3600,'کیلووات‌ساعت (kWh)':3600000,'الکترون‌ولت (eV)':1.602176634e-19}
+};
+function populate(keep=true){let c=$('category').value,oldF=$('from').value,oldT=$('to').value;let list=Object.keys(units[c]||{});if(c==='temp')list=['سلسیوس (°C)','فارنهایت (°F)','کلوین (K)'];const opt=list.map((x,i)=>`<option value="${i}">${x}</option>`).join('');$('from').innerHTML=opt;$('to').innerHTML=opt;if(keep){if(list.includes(oldF))$('from').value=oldF;if(list.includes(oldT))$('to').value=oldT}if($('from').selectedIndex===$('to').selectedIndex&&list.length>1)$('to').selectedIndex=1;convert()}
+function convert(){let c=$('category').value,n=Number($('amount').value);if($('amount').value.trim()===''||!Number.isFinite(n)){$('unitResult').textContent='—';return}let a=$('from').selectedIndex,b=$('to').selectedIndex,r;
+ if(c==='temp'){const toC=x=>a===0?x:a===1?(x-32)*5/9:x-273.15;let C=toC(n);r=b===0?C:b===1?C*9/5+32:C+273.15}
+ else{let list=Object.values(units[c]);r=n*list[a]/list[b]}
+ $('unitResult').textContent=fmt(r);$('unitNote').textContent=`${fmt(n)} ${$('from').selectedOptions[0].text} = ${fmt(r)} ${$('to').selectedOptions[0].text}`;
+}
+$('category').addEventListener('change',()=>populate(false));['amount','from','to'].forEach(id=>$(id).addEventListener('input',convert));$('swap').addEventListener('click',()=>{let a=$('from').selectedIndex,b=$('to').selectedIndex;$('from').selectedIndex=b;$('to').selectedIndex=a;convert()});populate(false);
+</script>
+</body></html>
